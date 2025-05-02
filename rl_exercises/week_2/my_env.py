@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import gymnasium as gym
+import numpy as np
 
+from typing import Any, SupportsFloat
 
 # ------------- TODO: Implement the following environment -------------
 class MyEnv(gym.Env):
@@ -28,32 +30,14 @@ class MyEnv(gym.Env):
     """
     metadata = {"render_modes": ["human"]}
 
-    def __init__(self):
-        """Initializes the observation and action space for the environment."""
-        pass
-
-    def __init__(self,transition_probabilities: np.ndarray = np.ones((5, 2)),rewards: list[float] = [1, 0, 0, 0, 10],horizon: int = 10,seed: int | None = None,):
-        """
-        Initialize the Mars Rover environment.
-
-        Parameters
-        ----------
-        transition_probabilities : np.ndarray, optional
-            A (num_states, 2) array specifying the probability of actions being followed.
-        rewards : list of float, optional
-            Rewards assigned to each position, by default [1, 0, 0, 0, 10].
-        horizon : int, optional
-            Maximum number of steps per episode, by default 10.
-        seed : int or None, optional
-            Random seed for reproducibility, by default None.
-        """
+    def __init__(self, transition_probabilities: np.ndarray = np.ones((5, 2)),rewards: list[float] = [1, 0, 0, 0, 10],horizon: int = 10,seed: int | None = None,):
         self.rng = np.random.default_rng(seed)
 
         self.rewards = list(rewards)
         self.P = np.array(transition_probabilities)
         self.horizon = int(horizon)
         self.current_steps = 0
-        self.position = 2  # start at middle
+        self.position = 0 
 
         # spaces
         n = self.P.shape[0]
@@ -65,7 +49,9 @@ class MyEnv(gym.Env):
         self.actions = np.arange(2)
 
         # transition matrix
-        self.transition_matrix = self.T = self.get_transition_matrix()    
+        self.transition_matrix = self.T = self.get_transition_matrix()
+
+    
 
     def reset(self,*,seed: int | None = None, options: dict[str, Any] | None = None,) -> tuple[int, dict[str, Any]]:
         """
@@ -86,7 +72,7 @@ class MyEnv(gym.Env):
             An empty info dictionary.
         """
         self.current_steps = 0
-        self.position = 2
+        self.position = 0
         return self.position, {}
 
     def step( self, action: int) -> tuple[int, SupportsFloat, bool, bool, dict[str, Any]]:
@@ -150,7 +136,7 @@ class MyEnv(gym.Env):
                 R[s, a] = float(self.rewards[nxt])
         return R
 
-    def get_transition_matrix(self,S: np.ndarray | None = None,A: np.ndarray | None = None,P: np.ndarray | None = None,) -> np.ndarray:
+    def get_transition_matrix(self):
         """
         Construct a deterministic transition matrix T[s, a, s'].
 
@@ -176,7 +162,7 @@ class MyEnv(gym.Env):
         T = np.zeros((nS, nA, nS), dtype=float)
         for s in S:
             for a in A:
-                s_next = max(0, min(nS - 1, s + (-1 if a == 0 else 1)))
+                s_next = max(0, min(nS - 1, s + (-1 if a == 0 else 1))) #TODO warum die Fkt?
                 T[s, a, s_next] = float(P[s, a])
         return T
 
