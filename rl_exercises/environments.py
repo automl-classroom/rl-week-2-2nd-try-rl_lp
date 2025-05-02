@@ -149,7 +149,7 @@ class MarsRover(gym.Env):
 
         return self.position, reward, terminated, truncated, {}
 
-    def get_reward_per_action(self) -> np.ndarray:
+    def get_reward_per_action(self) -> np.ndarray: 
         """
         Return the reward function R[s, a] for each (state, action) pair.
 
