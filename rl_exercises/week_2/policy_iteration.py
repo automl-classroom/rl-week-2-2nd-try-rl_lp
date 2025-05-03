@@ -52,12 +52,12 @@ class PolicyIteration(AbstractAgent):
         self.n_actions = self.env.action_space.n  # type: ignore[attr-defined]
 
         # TODO: Get the MDP components (states, actions, transitions, rewards)
-        self.S = None
-        self.A = None
-        self.T = None
-        self.R = None
+        self.S = self.env.states
+        self.A = self.env.actions
+        self.T = self.env.transition_matrix
+        self.R = self.env.rewards
         self.gamma = gamma
-        self.R_sa = None
+        self.R_sa = self.env.get_reward_per_action()
 
         # TODO: Initialize policy and Q-values
         self.pi = None

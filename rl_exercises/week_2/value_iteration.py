@@ -47,12 +47,12 @@ class ValueIteration(AbstractAgent):
         self.seed = seed
 
         # TODO: Extract MDP components from the environment
-        self.S = None
-        self.A = None
-        self.T = None
-        self.R_sa = None
-        self.n_states = None
-        self.n_actions = None
+        self.S = self.env.states
+        self.A = self.env.actions
+        self.T = self.env.transition_matrix
+        self.R_sa = self.env.get_reward_per_action()
+        self.n_states = len(self.env.states)
+        self.n_actions = len(self.env.actions)
 
         # placeholders
         self.V = np.zeros(self.n_states, dtype=float)
@@ -72,6 +72,9 @@ class ValueIteration(AbstractAgent):
         )
 
         # TODO: Call value_iteration() with extracted MDP components
+        self.V = V_opt
+        self.pi = pi_opt
+        self.policy_fitted = True
 
     def predict_action(
         self,
@@ -84,7 +87,8 @@ class ValueIteration(AbstractAgent):
             self.update_agent()
 
         # TODO: Return action from learned policy
-        raise NotImplementedError("predict_action() is not implemented.")
+        return [observation, info]
+        # raise NotImplementedError("predict_action() is not implemented.")
 
 
 def value_iteration(
@@ -125,10 +129,29 @@ def value_iteration(
     n_states, n_actions = R_sa.shape
     V = np.zeros(n_states, dtype=float)
     # rng = np.random.default_rng(seed)  uncomment this
-    pi = None
-
+    # pi = None
+    pi = np.zeros(n_states, dtype=float)
     # TODO: update V using the Q values until convergence
+    while True:
+        delta = 0
+
+        for s in range(0, n_states):
+            v = V[s]
+            V[s] = max(
+                R_sa[s, a]
+                + sum(T[s, a, s_next] * V[s_next] for s_next in range(s + 1, n_states))
+                for a in range(0, n_actions)
+            )
+            delta = max(delta, abs(v - V[s]))
+
+        if delta < epsilon:
+            break
 
     # TODO: Extract the greedy policy from V and update pi
+
+    for s in range(0, n_states):
+        for a in range(0, n_actions):
+            if V[s] == R_sa[s, a]:
+                pi[s] = a
 
     return V, pi

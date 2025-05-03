@@ -1,8 +1,8 @@
 # tests/test_template_env.py
 
-import gymnasium
-import numpy as np
-import pytest
+import gymnasium  # type: ignore
+import numpy as np  # type: ignore
+import pytest  # type: ignore
 from rl_exercises.week_2.my_env import MyEnv  # adjust import path as needed
 
 
