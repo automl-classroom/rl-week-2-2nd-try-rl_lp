@@ -87,7 +87,7 @@ class ValueIteration(AbstractAgent):
             self.update_agent()
 
         # TODO: Return action from learned policy
-        return [observation, info]
+        return [self.pi[observation], info]
         # raise NotImplementedError("predict_action() is not implemented.")
 
 
