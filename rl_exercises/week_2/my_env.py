@@ -132,13 +132,15 @@ class MyEnv(gym.Env):
 
         self.current_steps += 1
 
-        # stochastic flip with prob 1 - P[pos, action]          #TODO Der Teil wirkt als ob er stochastische sachen macht.
-        p = float(self.P[self.position, action])
-        follow = self.rng.random() < p
-        a_used = action if follow else 1 - action
+        ## stochastic flip with prob 1 - P[pos, action]          #TODO Der Teil wirkt als ob er stochastische sachen macht.
+        # p = float(self.P[self.position, action])
+        # follow = self.rng.random() < p
+        # a_used = action if follow else 1 - action
 
-        delta = -1 if a_used == 0 else 1
-        self.position = max(0, min(self.states[-1], self.position + delta))
+        # delta = -1 if a_used == 0 else 1
+        # self.position = max(0, min(self.states[-1], self.position + delta))
+
+        self.position = action  # TODO Hier ist es deterministisch
 
         reward = float(self.rewards[self.position])
         terminated = False

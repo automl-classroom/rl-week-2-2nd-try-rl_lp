@@ -1,4 +1,14 @@
-'''
+import unittest
+
+import numpy as np
+from rl_exercises.environments import MarsRover
+from rl_exercises.train_agent import evaluate
+from rl_exercises.week_2.policy_iteration import (
+    PolicyIteration,
+    policy_evaluation,
+    policy_improvement,
+)
+
 
 class TestPolicyIteration(unittest.TestCase):
     def test_policy_quality(self):
@@ -42,4 +52,3 @@ class TestPolicyIteration(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-'''
